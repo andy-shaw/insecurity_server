@@ -1,0 +1,31 @@
+package Jacobs.DataMining;
+
+public class DataPoint {
+
+	double latitude;
+	double longitude;
+	int cluster;
+	
+	public DataPoint(double latitude, double longitude, int cluster)
+	{
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.cluster = cluster;
+	}
+	
+	public double GetLatitude() {
+		return latitude;
+	}
+	
+	public double GetLongitude() {
+		return longitude;
+	}
+	
+	public int GetCluster() {
+		return cluster;
+	}
+	
+	public void SetCluster(int newCluster) {
+		cluster = newCluster;
+	}
+}
