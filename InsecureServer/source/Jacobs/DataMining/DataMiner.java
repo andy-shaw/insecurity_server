@@ -1,14 +1,24 @@
 package Jacobs.DataMining;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class DataMiner implements IDataMiner {
 
 	// TODO - Have a system to hold all points
 	// Or just grab from sql database if not in memory
 	
+	Set<DataPoint> points;
+	int kThreshold;
+	double dThreshold;
 	
+	public DataMiner(int groupMinimumSize, double distanceThreshold) {
+		points = new HashSet<DataPoint>();
+		this.kThreshold = groupMinimumSize;
+		this.dThreshold = distanceThreshold;
+	}
 	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		System.out.println("Hello world");
 	}
 	
@@ -17,11 +27,20 @@ public class DataMiner implements IDataMiner {
 				       + Math.pow((point1.longitude * point2.longitude), 2));
 	}
 	
-	private boolean IsNoise(DataPoint point) {
-		// TODO - implement
+	private boolean IsNoise(DataPoint point, double distance, int threshold) {
+		// Keep track of number of points within distance
+		int numberPoints = 0;
 		
+		// For each point, check if within distance
+		for (DataPoint p : points)
+		{
+			if (Distance(point, p) < distance)
+			{
+				numberPoints++;
+			}
+		}
 		
-		return true;
+		return numberPoints < threshold;
 	}
 	
 	private int ClassifyCluster(DataPoint point) {
@@ -45,7 +64,7 @@ public class DataMiner implements IDataMiner {
 		DataPoint temp = new DataPoint(latitude, longitude, 0);
 		
 		// Check if point is noise
-		if (!IsNoise(temp)) {
+		if (!IsNoise(temp, dThreshold, kThreshold)) {
 			// If not noise: Figure out the cluster it belong to
 			int cluster = ClassifyCluster(temp);
 			temp.SetCluster(cluster);
