@@ -12,6 +12,11 @@ public class DataMiner implements IDataMiner {
 	int kThreshold;
 	double dThreshold;
 	
+	/**
+	 * Constructor for DataMiner.
+	 * @param groupMinimumSize The minimum number of points needed to be considered not noise.
+	 * @param distanceThreshold The distance to check for other points.
+	 */
 	public DataMiner(int groupMinimumSize, double distanceThreshold) {
 		points = new HashSet<DataPoint>();
 		this.kThreshold = groupMinimumSize;
@@ -22,11 +27,24 @@ public class DataMiner implements IDataMiner {
 		System.out.println("Hello world");
 	}
 	
+	/**
+	 * Find the distance between two points.
+	 * @param point1 First point
+	 * @param point2 Second point
+	 * @return The distance between the two points.
+	 */
 	private double Distance(DataPoint point1, DataPoint point2) {
 		return Math.sqrt(Math.pow((point1.latitude + point2.latitude), 2)
 				       + Math.pow((point1.longitude * point2.longitude), 2));
 	}
 	
+	/**
+	 * Determines if point is noise or not.
+	 * @param point - The point to classify
+	 * @param distance - The distance to check for other points.
+	 * @param threshold - The minimum number of points needed to be considered not noise.
+	 * @return If the point is noise or not.
+	 */
 	private boolean IsNoise(DataPoint point, double distance, int threshold) {
 		// Keep track of number of points within distance
 		int numberPoints = 0;
@@ -42,11 +60,32 @@ public class DataMiner implements IDataMiner {
 		
 		return numberPoints < threshold;
 	}
-	
+
+	/**
+	 * Classify a point into a cluster.
+	 * @param point - A point that is not a noise point.
+	 * @return The cluster the point belongs to.
+	 */
 	private int ClassifyCluster(DataPoint point) {
-		// TODO - implement
+		DataPoint closestPoint = null;
+		double closestDistance = 1000000;
 		
-		return 0;
+		// Find the closest point to the datapoint, give same cluster
+		for(DataPoint p : points) {
+			//Point must be closest and not a noise point
+			if (p.GetCluster() != 0 && Distance(point, p) < closestDistance){
+				closestPoint = p;
+				closestDistance = Distance(point, p);
+			}
+		}
+		
+		if (closestPoint == null)
+		{
+			DataPoint.maxCluster++;
+			return DataPoint.maxCluster;
+		}
+		else
+			return closestPoint.GetCluster();
 	}
 
 	@Override
@@ -69,20 +108,32 @@ public class DataMiner implements IDataMiner {
 			int cluster = ClassifyCluster(temp);
 			temp.SetCluster(cluster);
 		}
+		
+		
 		// TODO - Classify security level of point
 		
 		
 		
 		return rawRisk;
 	}
-	
-	public void UpdateNoisePoints() {
-		// For all noise points
-		
-		// Check if point is still noise
-		
-		// If not: Figure out cluster point belongs to
-		
-	}
 
+	/**
+	 * Reclassify all noise points. This updates any emerging clusters
+	 * from new high density noise areas.
+	 */
+	public void UpdateNoisePoints() {
+
+		for (DataPoint p : points)
+		{
+			// For all noise points
+			if (p.cluster == 0) {
+				// Check if point is still noise
+				if (!IsNoise(p, dThreshold, kThreshold)) {
+					// If not noise: Figure out the cluster it belong to
+					int cluster = ClassifyCluster(p);
+					p.SetCluster(cluster);
+				}
+			}		
+		}
+	}
 }

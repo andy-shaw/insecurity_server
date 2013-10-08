@@ -6,6 +6,8 @@ public class DataPoint {
 	double longitude;
 	int cluster;
 	
+	public static int maxCluster = 1;
+	
 	public DataPoint(double latitude, double longitude, int cluster)
 	{
 		this.latitude = latitude;
@@ -26,6 +28,7 @@ public class DataPoint {
 	}
 	
 	public void SetCluster(int newCluster) {
+		DataPoint.maxCluster = Math.max(newCluster, DataPoint.maxCluster);
 		cluster = newCluster;
 	}
 }
