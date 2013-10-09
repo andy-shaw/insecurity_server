@@ -67,6 +67,24 @@ public class DataMiner implements IDataMiner {
 	 * @return The cluster the point belongs to.
 	 */
 	private int ClassifyCluster(DataPoint point) {
+		
+		DataPoint closestPoint = ClosestPoint(point);
+		
+		if (closestPoint == null)
+		{
+			DataPoint.maxCluster++;
+			return DataPoint.maxCluster;
+		}
+		else
+			return closestPoint.GetCluster();
+	}
+	
+	/**
+	 * Find the closest clustered point to the given point
+	 * @param point - A point
+	 * @return The closest already clustered point, else null
+	 */
+	private DataPoint ClosestPoint(DataPoint point) {
 		DataPoint closestPoint = null;
 		double closestDistance = 1000000;
 		
@@ -79,13 +97,7 @@ public class DataMiner implements IDataMiner {
 			}
 		}
 		
-		if (closestPoint == null)
-		{
-			DataPoint.maxCluster++;
-			return DataPoint.maxCluster;
-		}
-		else
-			return closestPoint.GetCluster();
+		return closestPoint;
 	}
 
 	@Override
@@ -111,6 +123,13 @@ public class DataMiner implements IDataMiner {
 		
 		
 		// TODO - Classify security level of point
+		// Simple procedure for now, more complicated later
+		DataPoint closestPoint = ClosestPoint(temp);
+		if(closestPoint != null) {
+			rawRisk = Distance(closestPoint, temp);
+		} else {
+			rawRisk = 100000;
+		}
 		
 		
 		
