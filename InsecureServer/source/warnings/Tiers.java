@@ -2,7 +2,7 @@ package warnings;
 
 
 /**
- * Enumeration for responses sent to the phone
+ * Enumeration for levels of reaction.
  *
  * @author Andy Shaw
  */
