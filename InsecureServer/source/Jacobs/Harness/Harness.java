@@ -17,16 +17,16 @@ public class Harness {
 		// TODO - Instantiate whatever else here
 	}
 	
-	public void AddPoint(double Longitude, double Latitude)
+	public String[] AddPoint(double Longitude, double Latitude)
 	{
 		// Get raw value expressed as Degrees. Convert under assumption 1 degree ~= 60 miles.
 		double raw = miner.AddLocation(Latitude, Longitude);
 		
 		// Raw conversion to error level
-        raw = raw/60;
+        double warning = raw/60;
         
         // create a response to send to phone
-        
+        return Responder.createResponse(warning);
 	}
 
 	public void FalseAlarmAddPoint(double Latitude, double Longitude)
