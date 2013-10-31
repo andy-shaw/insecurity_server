@@ -1,5 +1,6 @@
 package Jacobs.Harness;
 
+import warnings.Responder;
 import Jacobs.DataMining.DataMiner;
 
 public class Harness {
@@ -21,9 +22,19 @@ public class Harness {
 		// Get raw value expressed as Degrees. Convert under assumption 1 degree ~= 60 miles.
 		double raw = miner.AddLocation(Latitude, Longitude);
 		
-		// TODO - raw conversion to error level
+		// Raw conversion to error level
+        raw = raw/60;
+        
+        // create a response to send to phone
+        
 	}
 
-	
+	public void FalseAlarmAddPoint(double Latitude, double Longitude)
+    {
+        // Get raw value expressed as Degrees. Convert under assumption 1 degree ~= 60 miles.
+        double notNeeded = miner.AddLocation(Latitude, Longitude);
+        
+        // do not create a response for the phone
+    }
 	
 }
