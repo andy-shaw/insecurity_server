@@ -131,7 +131,7 @@ public class DataMiner implements IDataMiner {
 			rawRisk = 100000;
 		}
 		
-		
+		// TODO - handle outliers that aren't noise
 		
 		return rawRisk;
 	}
