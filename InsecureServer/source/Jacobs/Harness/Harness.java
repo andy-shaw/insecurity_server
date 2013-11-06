@@ -11,7 +11,7 @@ public class Harness {
 	{
 		// Create dataminer
 		// This keeps hold of all the points as well as additional info
-		miner = new DataMiner(7, 1.0/69.0); // 7 points minimum for cluster
+		miner = new DataMiner(3, 1.0/69.0); // 7 points minimum for cluster
 											// 1 mile max range between points in cluster
 				
 		// TODO - Instantiate whatever else here
