@@ -5,9 +5,6 @@ import java.util.Set;
 
 public class DataMiner implements IDataMiner {
 
-	// TODO - Have a system to hold all points
-	// Or just grab from sql database if not in memory
-	
 	Set<DataPoint> points;
 	int kThreshold;
 	double dThreshold;
@@ -24,7 +21,7 @@ public class DataMiner implements IDataMiner {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println("Hello world");
+		System.out.println("This is an Implementation of DBSCAN.");
 	}
 	
 	/**
@@ -75,10 +72,19 @@ public class DataMiner implements IDataMiner {
 			DataPoint.maxCluster++;
 			return DataPoint.maxCluster;
 		}
-
-		// TODO - if point.cluster==0, iterate through all nearby points for 
+		else if (closestPoint.cluster == 0)
+		{
+			Set<DataPoint> closestPoints = ClosestPoints(point);
+			
+			for (DataPoint nearPoint : closestPoints) {
+				if (nearPoint.cluster > 0)
+					return nearPoint.cluster;
+			}
+			
+			DataPoint.maxCluster++;
+			return DataPoint.maxCluster;
 		
-		else
+		} else
 			return closestPoint.GetCluster();
 	}
 	
@@ -101,6 +107,21 @@ public class DataMiner implements IDataMiner {
 		}
 		
 		return closestPoint;
+	}
+	
+	private Set<DataPoint> ClosestPoints(DataPoint point) {
+		
+		Set<DataPoint> closestPoints = new HashSet<DataPoint>(); 
+		
+		// Find the closest point to the datapoint, give same cluster
+		for(DataPoint p : points) {
+			//Point must be closest and not a noise point
+			if (Distance(point, p) < this.dThreshold){
+				closestPoints.add(p);
+			}
+		}
+		
+		return closestPoints;
 	}
 
 	@Override
@@ -125,8 +146,7 @@ public class DataMiner implements IDataMiner {
 		}
 		
 		
-		// TODO - Classify security level of point
-		// Simple procedure for now, more complicated later
+		// Calculate raw risk
 		DataPoint closestPoint = ClosestPoint(temp);
 		if(closestPoint != null) {
 			rawRisk = Distance(closestPoint, temp);
@@ -134,7 +154,7 @@ public class DataMiner implements IDataMiner {
 			rawRisk = 100000;
 		}
 		
-		// TODO - handle outliers that aren't noise
+		UpdateNoisePoints();
 		
 		return rawRisk;
 	}
