@@ -14,7 +14,7 @@ public class Harness {
 		miner = new DataMiner(3, 1.0/69.0); // 7 points minimum for cluster
 											// 1 mile max range between points in cluster
 				
-		// TODO - Instantiate whatever else here
+		// XXX - Instantiate whatever else here
 	}
 	
 	public String[] AddPoint(double Longitude, double Latitude)

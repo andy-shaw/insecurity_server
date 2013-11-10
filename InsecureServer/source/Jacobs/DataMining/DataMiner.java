@@ -75,6 +75,9 @@ public class DataMiner implements IDataMiner {
 			DataPoint.maxCluster++;
 			return DataPoint.maxCluster;
 		}
+
+		// TODO - if point.cluster==0, iterate through all nearby points for 
+		
 		else
 			return closestPoint.GetCluster();
 	}
